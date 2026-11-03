@@ -49,11 +49,11 @@ one worker, relative tolerance 0.001, absolute tolerance 0,
 and a maximum of 3000 generations. Local polishing is disabled so
 that the recorded search describes DE alone. These settings are implementation choices.
 
-SciPy reports successful convergence under the population-spread criterion. The run used 263 generations and
-38,016 objective evaluations in 203.0 seconds.
+SciPy reports successful convergence under the population-spread criterion. The run used 254 generations and
+36,720 objective evaluations in 231.2 seconds.
 The final population objective standard deviation is
-9.0950796e-05; its convergence threshold is
-9.3219259e-05.
+8.85152e-05; its convergence threshold is
+9.292819e-05.
 The check is std(population objective) <= atol + tol * abs(mean(population objective)).
 Convergence measures agreement within this population; it does not prove global
 optimality, parameter uniqueness, or physical identifiability. This is one seeded run.
@@ -67,44 +67,44 @@ one summary per generation. The final population is saved in `final_population.n
 
 | Metric | Original demonstration | Calibrated |
 |---|---:|---:|
-| NSE | -1.050765 | 0.906972 |
-| RMSE [m3/s] | 36.895747 | 7.858229 |
-| Mean bias [m3/s] | -3.482851 | -1.126684 |
-| Volume bias [%] | -15.5658 | -5.0354 |
+| NSE | -1.050765 | 0.907224 |
+| RMSE [m3/s] | 36.895747 | 7.847598 |
+| Mean bias [m3/s] | -3.482851 | -0.974676 |
+| Volume bias [%] | -15.5658 | -4.3561 |
 
 Positive bias means overestimation. The best objective value is
-0.0930277795. The original demonstration is a before-calibration
+0.0927762591. The original demonstration is a before-calibration
 reference only: some of its values lie outside the supplied calibration bounds, so it
 was not used as DE's initial candidate and is not a feasible baseline for this search.
 
 ![Observed, original and calibrated hydrographs](01_hydrographs.png)
 
-At the largest observed peak (2011-01-14 05:00:00), observed discharge is 153.50 m3/s and simulated discharge is 105.12 m3/s. These are compared at the same timestamp; the simulated maximum may occur at another time.
+At the largest observed peak (2011-01-14 05:00:00), observed discharge is 153.50 m3/s and simulated discharge is 105.39 m3/s. These are compared at the same timestamp; the simulated maximum may occur at another time.
 
 ### Best parameter vector
 
 | Parameter | Lower bound | Upper bound | Best optimizer value |
 |---|---:|---:|---:|
-| `snw_dth` | 0 | 10 | 8.12485437 |
-| `snw_att` | -2 | 3 | -0.0062727709 |
-| `snw_pmf` | 0 | 3 | 0.53256844 |
-| `snw_amf` | 0 | 10 | 0.0431229834 |
-| `sl0_dth` | 0 | 50 | 42.643555 |
-| `sl0_pwp` | 5 | 700 | 52.2029553 |
-| `sl0_fcy` | 100 | 700 | 105.45198 |
-| `sl0_bt0` | 0.01 | 10 | 1.89682181 |
-| `urr_dth` | 0 | 10 | 0.113816818 |
-| `lrr_dth` | 0 | 50 | 1.0068972 |
-| `urr_wsr` | 0 | 1 | 0.994174623 |
-| `urr_ulc` | 0 | 1 | 0.178668332 |
-| `urr_tdh` | 0 | 200 | 164.664265 |
-| `urr_tdr` | 0.01 | 1 | 0.648295053 |
-| `urr_ndr` | 0 | 0.1 | 2.38736514e-05 |
-| `urr_uct` | 0 | 0.1 | 1.51544705e-05 |
-| `lrr_dre` | 0 | 0.01 | 0.00910482521 |
-| `lrr_lct` | 0 | 0.01 | 1.93903357e-06 |
+| `snw_dth` | 0 | 10 | 8.58808069 |
+| `snw_att` | -2 | 3 | -0.00604555848 |
+| `snw_pmf` | 0 | 3 | 0.521346298 |
+| `snw_amf` | 0 | 10 | 0.0459348253 |
+| `sl0_dth` | 0 | 50 | 49.0644586 |
+| `sl0_pwp` | 5 | 700 | 646.548615 |
+| `sl0_fcy` | 100 | 700 | 122.273228 |
+| `sl0_bt0` | 0.01 | 10 | 2.05236633 |
+| `urr_dth` | 0 | 10 | 0.410699836 |
+| `lrr_dth` | 0 | 50 | 0.803728562 |
+| `urr_wsr` | 0 | 1 | 0.991038551 |
+| `urr_ulc` | 0 | 1 | 0.181242428 |
+| `urr_tdh` | 0 | 200 | 98.4825932 |
+| `urr_tdr` | 0.01 | 1 | 0.389222389 |
+| `urr_ndr` | 0 | 0.1 | 6.94832967e-06 |
+| `urr_uct` | 0 | 0.1 | 3.2343223e-05 |
+| `lrr_dre` | 0 | 0.01 | 0.00913048507 |
+| `lrr_lct` | 0 | 0.01 | 2.60244895e-06 |
 
-Parameters within 1% of a supplied bound: snw_amf, sl0_fcy, urr_wsr, urr_ndr, urr_uct, lrr_lct.
+Parameters within 1% of a supplied bound: snw_amf, urr_wsr, urr_ndr, urr_uct, lrr_lct.
 A boundary result is reported without expanding the supplied search region.
 It can reflect limited data, parameter trade-offs, or the chosen bounds and objective;
 it does not alone establish that the physical parameter is known precisely.
@@ -118,7 +118,7 @@ and ambiguous screenshot comments are not used to redefine these parameters.
 The upper panel shows all attempted objective values. Individual trials can get worse
 while the search improves. The lower panel shows the running minimum, which can only
 decrease or remain constant. After the first candidate it improved
-61 times; flat portions are intervals without a new best.
+72 times; flat portions are intervals without a new best.
 When every objective value is positive, the upper panel and parameter/objective scatter
 plots use a logarithmic objective axis to show both poor trials and the better region.
 No evaluations are discarded from the plots or the history table.
@@ -145,9 +145,9 @@ Broad spread or a changing best coordinate can indicate weak constraint or trade
 ![Forcing and complete internal diagnostics](06_model_diagnostics.png)
 
 All saved internal outputs finite: True.
-Minimum simulated discharge: 1.5425457 m3/s.
+Minimum simulated discharge: 1.5450004 m3/s.
 Maximum absolute hourly water-balance residual:
-9.0897083e-06 mm.
+8.4340572e-06 mm.
 Small balance residuals check numerical conservation, not goodness of fit.
 The supplied implementation's `get_discharge()` uses the channel outflow. Separate
 subsurface exports are shown in the diagnostics and included by the supplied balance
