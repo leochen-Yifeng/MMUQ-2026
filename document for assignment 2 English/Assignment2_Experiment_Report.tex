@@ -114,6 +114,50 @@ The \param{snw_pmf} diagnostic window is 11--14 January 2011. The lower endpoint
 \begin{figure}[H]\centering\includegraphics[width=\textwidth]{figures/hydrograph_lrr_dre.png}\caption{Discharge response to the lower-reservoir channel outflow coefficient.}\end{figure}
 The \param{lrr_dre} diagnostic window is 7--10 January 2011. The lower endpoint's net squared-error increase in this window is about 82.5\% of its full-period net increase. The upper endpoint reduces net error in the window, while its full-period objective increases. These ratios use signed error changes, so positive and negative periods can offset; they are not fractions of all absolute error changes.
 The figures confirm that these parameters can alter hydrographs and identify periods with substantial changes. The causal pathways through soil storage, melt, and reservoir release come from the model equations; internal states must be examined to verify each individual event.
+\clearpage
+\section{Differential evolution calibration with time-weighted objective}
+Use fixed weights obtained by minimizing the worst relative response over 60 perturbation points around the original vector, with minimum weight 0.7 for the highest 10\% of observed flows and 0.1 otherwise. Differential evolution recalibrates within the original bounds with the original vector included as an initial candidate and the same random seed. The original early-convergence criterion was disabled and the run reached 700 generations, with 100944 objective evaluations.
+\begin{center}\begin{tabular}{lrr}\toprule
+Metric & Original & Weighted DE, 700 generations\\\midrule
+Weighted objective & 0.102420 & 0.099737\\
+Standard NSE & 0.907224 & 0.902678\\
+Simulation at maximum observed peak ($\mathrm{m^3/s}$) & 105.39 & 105.26\\\bottomrule\end{tabular}\end{center}
+The observed value at that time is 153.50 $\mathrm{m^3/s}$. The run stopped at its generation limit, not by the usual convergence criterion, and does not establish a global optimum. Standard NSE and peak comparisons are for the calibration period; no independent validation was performed.
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{figures/weighted_de_700_fit.png}\caption{Original calibration and the time-weighted differential-evolution fit.}\end{figure}
+\clearpage
+\subsection{Sensitivity before and after the adjustment}
+The original columns use the original vector and $J=1-\mathrm{NSE}$; the weighted columns use the new vector and the fixed-weight objective. Each column uses 20 non-baseline perturbations around its respective vector. The mean is the mean absolute relative objective change; the maximum is the largest absolute relative change.
+\begin{center}\small\begin{tabular}{lrrrr}\toprule
+Parameter & Original mean & Original max & Weighted mean & Weighted max\\\midrule
+\param{sl0_fcy} & 5.81\% & 16.47\% & 4.63\% & 12.89\%\\
+\param{snw_pmf} & 4.77\% & 14.64\% & 4.02\% & 11.96\%\\
+\param{lrr_dre} & 4.22\% & 19.42\% & 4.76\% & 16.84\%\\\bottomrule\end{tabular}\end{center}
+All three maxima decrease, but none is below 10\%; the mean for \param{lrr_dre} increases. The approximately 10\% limit around the original vector did not hold after recalibration. Weights were designed from original perturbation points and about 31.5\% of hours are near the minimum; high-flow protection does not guarantee improved peak fitting. Objectives and baselines differ, and feasible perturbation ranges may differ, so these relative changes are not changes in standard NSE.
+
+
+\clearpage
+\section{Recalibration with absolute-error objective}
+Both numerator and denominator use absolute deviations, with the observed mean as the denominator reference:
+\[J_{\mathrm{abs}}=\frac{\sum_t|Q_t^{\mathrm{sim}}-Q_t^{\mathrm{obs}}|}{\sum_t|Q_t^{\mathrm{obs}}-\overline Q^{\mathrm{obs}}|}.\]
+This is absolute error at every time step, distinct from Huber loss, which is quadratic for small residuals and linear for large residuals. Differential evolution starts from a Latin-hypercube random population without inserting the original best vector. The original calibration bounds, population multiplier 8, and random seed 42 are retained. Early stopping was disabled and the run reached 700 generations and 100944 evaluations. It stopped at the generation limit, without establishing natural convergence or a global optimum.
+\begin{center}\begin{tabular}{lrr}\toprule
+Metric & Original & Absolute-error calibration\\\midrule
+$J_{\mathrm{abs}}$ & 0.31977 & 0.30188\\
+Standard NSE & 0.90722 & 0.87954\\
+Simulation at maximum observed peak ($\mathrm{m^3/s}$) & 105.39 & 100.60\\\bottomrule\end{tabular}\end{center}
+The observed discharge at that time was 153.50 $\mathrm{m^3/s}$. The absolute-error objective improved, while standard NSE decreased and the simulated value at the largest observed peak was lower. All metrics refer to the calibration period; there is no independent validation.
+\begin{figure}[H]\centering\includegraphics[width=\textwidth]{figures/absolute_de_fit.png}\caption{Original NSE calibration and absolute-error calibration.}\end{figure}
+\clearpage
+\subsection{Sensitivity before and after the adjustment}
+The original columns use the original vector and $J=1-\mathrm{NSE}$; the absolute-error columns use the recalibrated vector and $J_{\mathrm{abs}}$. Each reports the mean and maximum absolute relative changes over 20 non-baseline perturbations around its respective vector.
+\begin{center}\small\begin{tabular}{lrrrr}\toprule
+Parameter & Original mean & Original max & Absolute mean & Absolute max\\\midrule
+\param{sl0_fcy} & 5.81\% & 16.47\% & 2.18\% & 10.75\%\\
+\param{snw_pmf} & 4.77\% & 14.64\% & 1.04\% & 2.80\%\\
+\param{lrr_dre} & 4.22\% & 19.42\% & 3.05\% & 10.61\%\\\bottomrule\end{tabular}\end{center}
+The mean and maximum relative changes decrease for all three parameters. The maximum for \param{snw_pmf} falls below 10\%; the other two remain slightly above. Objectives, baselines, and possibly feasible perturbation ranges differ, so these are not changes in standard NSE. A complete new ranking of all 18 parameters has not been computed.
+
+
 \section{Open question}
 Different random seeds can produce similar NSE values but substantially different parameter vectors. This experiment uses one saved vector. A different baseline requires new boundary checks and an assessment of whether the conclusions remain stable.
 The data and scripts are in the accompanying Assignment 2 English folder. Result tables cover individual perturbations, sensitivity ranking, and combined perturbations.
